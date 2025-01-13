@@ -3,9 +3,9 @@
 #include <Arduino.h>
 #include <Joystick.h>
 
-    #define EEPROM_DATA_AVAILABLE_INDEX 0     // eeprom address to indicate data available
-    #define EEPROM_DATA_INDEX 10              // eeprom start address for data
-    #define MEM_AXES  2
+#define EEPROM_DATA_AVAILABLE_INDEX 0     // eeprom address to indicate data available
+#define EEPROM_DATA_INDEX 10              // eeprom start address for data
+#define MEM_AXES  2
 
 class EepromManager {
 public:

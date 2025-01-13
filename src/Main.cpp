@@ -1,9 +1,11 @@
 #include <Arduino.h>
+#include "defines.h"
 #include "EepromManager.h"
 #include "Joy.h"
 #include "AxisCalibration.h"
 #include "MotorController.h"
 #include "Communication.h"
+
 
 bool blCalibration =  true;           // start flag
 bool passOk = true;                   // error flag
@@ -15,7 +17,6 @@ const byte MUX_EN_INPUT_ADD1 = B00000010;       // Multiplexer Adjustemts for Ca
 byte roll_speed = 0;
 byte pitch_speed = 0;
 
-
 EepromManager eepromManager;   // Create a EepromManager instance
 Joy joy(eepromManager);        // Create a Joy instance and pass the eepromManager object
 Multiplexer mux(&joy.getJoystick());  // Create a Multiplexer instance and pass the joy object
@@ -25,14 +26,11 @@ Encoder counterRoll(ROLL2_PIN, ROLL1_PIN);                // init encoder librar
 Encoder counterPitch(PITCH2_PIN, PITCH1_PIN);             // init encoder library for pitch ir sensor
 AxisConfiguration rollConfig = {false, -256, 256, false, false};  // Define rollConfig
 AxisConfiguration pitchConfig = {false, -256, 256, false, false}; // Define pitchConfig
-Communication comm(joy, rollConfig, pitchConfig, counterRoll, counterPitch, roll_speed, pitch_speed);          // Create a Communication instance and initialize serial communication
-
 Axis rollAxis(ROLL_L_PWM, ROLL_R_PWM, true, &counterRoll, &mux);            // Create a Axis instance for roll and pass the counterRoll and mux object
 Axis pitchAxis(PITCH_U_PWM, PITCH_D_PWM, false, &counterPitch, &mux);       // Create a Axis instance for pitch and pass the counter
+Communication comm(joy, rollConfig, pitchConfig, counterRoll, counterPitch, roll_speed, pitch_speed);          // Create a Communication instance and initialize serial communication
 
 void ArduinoSetup();    // Arduino setup function
-const int switch_pin = MOSI; // Pin where the push button is connected
-int buttonState = 0; // Variable to store the button state
 
 void setup() {  
 
@@ -52,28 +50,13 @@ void setup() {
     motorController.EnableMotors(); // Enable motors
 
     delay(500);
-
-    // // Access gains from Joy
-    // Gains* gainsPtr = joy.getGains();
-    // // Example: Print totalGain of the first axis
-    // Serial.print("Total Gain of first axis: ");
-    // Serial.println(gainsPtr[0].totalGain);
 }
 
 void loop() {
 
     currentMillis = millis(); // number of milliseconds passed since the Arduino board began running the current program
     mux.ReadMux();            // Read values of buttons and end switch sensors (except yoke axes)
-    
-//     buttonState = digitalRead(switch_pin);
-
-//   // Check if the button is pressed
-//   if (buttonState != lastButtonState) {
-//     if (buttonState == HIGH) {
-//       // Button is pressed, increment the function counter
-//       currentFunction++;      
-
-
+ 
     if(blCalibration)
     { 
         passOk = true;
@@ -126,49 +109,46 @@ void loop() {
 }
 
 void ArduinoSetup() {
-    // Set the switch pin as input
-      pinMode(switch_pin, INPUT);
+    // Pitch Pins
+    pinMode(PITCH_EN, OUTPUT);
+    pinMode(PITCH_U_PWM, OUTPUT);
+    pinMode(PITCH_D_PWM, OUTPUT);
 
-      // Pitch Pins
-      pinMode(PITCH_EN, OUTPUT);
-      pinMode(PITCH_U_PWM, OUTPUT);
-      pinMode(PITCH_D_PWM, OUTPUT);
+    // Roll Pins
+    pinMode(ROLL_EN, OUTPUT);
+    pinMode(ROLL_R_PWM, OUTPUT);
+    pinMode(ROLL_L_PWM, OUTPUT);
 
-      // Roll Pins
-      pinMode(ROLL_EN, OUTPUT);
-      pinMode(ROLL_R_PWM, OUTPUT);
-      pinMode(ROLL_L_PWM, OUTPUT);
+    // Buttons Pins (Multiplexer)
+    pinMode(MUX_S0, OUTPUT);
+    pinMode(MUX_S1, OUTPUT);
+    pinMode(MUX_S2, OUTPUT);
+    pinMode(MUX_S3, OUTPUT);
 
-      // Buttons Pins (Multiplexer)
-      pinMode(MUX_S0, OUTPUT);
-      pinMode(MUX_S1, OUTPUT);
-      pinMode(MUX_S2, OUTPUT);
-      pinMode(MUX_S3, OUTPUT);
+    pinMode(MUX_EN_INPUT, OUTPUT);
+    pinMode(MUX_SIGNAL_INPUT, INPUT);
 
-      pinMode(MUX_EN_INPUT, OUTPUT);
-      pinMode(MUX_SIGNAL_INPUT, INPUT);
+    // Define pin default states
+    // Pitch
+    digitalWrite(PITCH_EN, LOW);
+    digitalWrite(PITCH_U_PWM, LOW);
+    digitalWrite(PITCH_D_PWM, LOW);
+    // Roll
+    digitalWrite(ROLL_EN, LOW);
+    digitalWrite(ROLL_R_PWM, LOW);
+    digitalWrite(ROLL_L_PWM, LOW);
+    // Multiplexer
+    digitalWrite(MUX_S0, LOW);
+    digitalWrite(MUX_S1, LOW);
+    digitalWrite(MUX_S2, LOW);
+    digitalWrite(MUX_S3, LOW);
 
-      // Define pin default states
-      // Pitch
-      digitalWrite(PITCH_EN, LOW);
-      digitalWrite(PITCH_U_PWM, LOW);
-      digitalWrite(PITCH_D_PWM, LOW);
-      // Roll
-      digitalWrite(ROLL_EN, LOW);
-      digitalWrite(ROLL_R_PWM, LOW);
-      digitalWrite(ROLL_L_PWM, LOW);
-      // Multiplexer
-      digitalWrite(MUX_S0, LOW);
-      digitalWrite(MUX_S1, LOW);
-      digitalWrite(MUX_S2, LOW);
-      digitalWrite(MUX_S3, LOW);
+    // Not for all Arduinos!
+    // This sets the PWM Speed to maximum for noise reduction
 
-      // Not for all Arduinos!
-      // This sets the PWM Speed to maximum for noise reduction
+    // Timer1: pins 9 & 10
+    TCCR1B = _BV(CS10);  // Change the PWM frequency to 31.25kHz - pins 9 & 10
 
-      // Timer1: pins 9 & 10
-      TCCR1B = _BV(CS10);  // Change the PWM frequency to 31.25kHz - pins 9 & 10
-
-      // Timer4: pin 13 & 6
-      TCCR4B = _BV(CS40);  // Change the PWM frequency to 31.25kHz - pin 13 & 6
-   }
+    // Timer4: pin 13 & 6
+    TCCR4B = _BV(CS40);  // Change the PWM frequency to 31.25kHz - pin 13 & 6
+}

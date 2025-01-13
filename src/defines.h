@@ -72,13 +72,4 @@
    #define default_ROLL_PWM_MAX 150;
    #define default_ROLL_PWM_MIN 40;
 
-   /******************************************
-      Beep
-   *******************************************/
-   #define BEEP_SHORT_TONE 200
-   #define BEEP_LONG_TONE 600
-   #define BEEP_CODE_FREQUENCY 1000
-   #define BEEP_CODE_DELAY 1000
-   #define BEEP_CODE_COUNT 3 //start with 0
-
 #endif
