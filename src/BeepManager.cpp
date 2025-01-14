@@ -26,29 +26,29 @@ void BeepManager::beep(int duration, int frequency) {
   delay(200);                      // delay
 }
 
-// // beep code for pitch axis
-// void BeepManager::calibrationBeepPitch() {
-//   beep(BEEP_LONG_TONE, 1000);  
-//   beep(BEEP_SHORT_TONE, 500);  
-//   delay(300);
-// }
+// beep code for pitch axis
+void BeepManager::calibrationBeepPitch() {
+  beep(BEEP_LONG_TONE, 1000);  
+  beep(BEEP_SHORT_TONE, 500);  
+  delay(300);
+}
 
-// // beep code for roll axis
-// void BeepManager::calibrationBeepRoll() {
-//   beep(BEEP_LONG_TONE, 500);  
-//   beep(BEEP_SHORT_TONE, 1000);  
-//   delay(300);
-// }
+// beep code for roll axis
+void BeepManager::calibrationBeepRoll() {
+  beep(BEEP_LONG_TONE, 500);  
+  beep(BEEP_SHORT_TONE, 1000);  
+  delay(300);
+}
 
 // Roll or Pitch code?
-// void BeepManager::calibrationBeepAxis(bool isRoll) {
-//   if(isRoll)
-//   {
-//     calibrationBeepRoll();
-//   }else{
-//     calibrationBeepPitch();
-//   }
-// }
+void BeepManager::calibrationBeepAxis(bool isRoll) {
+  if(isRoll)
+  {
+    calibrationBeepRoll();
+  }else{
+    calibrationBeepPitch();
+  }
+}
 
 // system start
 void BeepManager::systemStart() {
@@ -147,3 +147,13 @@ void BeepManager::calibrationEncoderInverted() {
   }
 }
 
+void BeepManager::NoMotorPower() {
+  for(byte x=0; x<=BEEP_CODE_COUNT;x++)
+  {
+    beep(BEEP_LONG_TONE, BEEP_CODE_FREQUENCY);  
+    beep(BEEP_LONG_TONE, BEEP_CODE_FREQUENCY);  
+    beep(BEEP_LONG_TONE, BEEP_CODE_FREQUENCY);  
+    beep(BEEP_LONG_TONE, BEEP_CODE_FREQUENCY);  
+    delay(BEEP_CODE_DELAY);
+  }
+}

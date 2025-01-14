@@ -1,11 +1,24 @@
 #include "AxisCalibration.h"
-#include "BeepManager.h"
 
-#define BUZZER_PIN MISO //12
-BeepManager beepManager(BUZZER_PIN);  // Instanz der BeepManager Klasse
 
-Axis::Axis(int motorLeftPin, int motorRightPin, bool isRoll, Encoder* encoder, Multiplexer* multiplexerPtr)
-    :  multiplexer(multiplexerPtr), encoder(encoder), motorPinLeft(motorLeftPin), motorPinRight(motorRightPin), blIsRoll(isRoll), speed(1), lastMovementTime(millis()) 
+//#define BUZZER_PIN MISO //12
+//BeepManager beepManager(BUZZER_PIN);  // Instanz der BeepManager Klasse
+
+Axis::Axis(int motorLeftPin
+    , int motorRightPin
+    , bool isRoll
+    , Encoder* encoder
+    , Multiplexer* multiplexerPtr
+    , BeepManager* beepManager
+    )
+    :  multiplexer(multiplexerPtr)
+    , encoder(encoder)
+    , motorPinLeft(motorLeftPin)
+    , motorPinRight(motorRightPin)
+    , blIsRoll(isRoll)
+    , speed(1)
+    , lastMovementTime(millis())
+    , beepManager(beepManager)     
 {
 }
 
@@ -89,16 +102,17 @@ bool Axis::ErrorCheck()
 {
   if(config.blError)
   {
-    beepManager.calibrationError();
+    beepManager->calibrationError();
     delay(1000);
    
-    if(config.blEncoderInverted) beepManager.calibrationEncoderInverted();
+    if(config.blEncoderInverted) beepManager->calibrationEncoderInverted();
     
-    if(config.blMotorInverted) beepManager.calibrationMotorInverted();
+    if(config.blMotorInverted) beepManager->calibrationMotorInverted();
 
-    if(config.blTimeout) beepManager.calibrationTimeoutGeneral();
+    if(config.blTimeout) beepManager->calibrationTimeoutGeneral();
     
-    if(config.blAxisTimeout) beepManager.calibrationTimeoutGeneral();
+    if(config.blAxisTimeout) beepManager->calibrationTimeoutMotor();
+    
   }
   return false;
 }
@@ -106,7 +120,7 @@ bool Axis::ErrorCheck()
 // Calibration method for the axis
 bool Axis::Calibrate() {
 
-    beepManager.calibrationStart();     // Calibration Start
+    beepManager->calibrationBeepAxis(blIsRoll);     // Calibration Start
 
     config = {false, 0, 0, false, false, false, false}; // Reset config
     calibrationStartTime = millis();  // Mark the calibration start time
@@ -241,7 +255,7 @@ bool Axis::Calibrate() {
 
     // Stop the motor when the encoder reaches 0
     StopMotor(); 
-    beepManager.calibrationSuccess();   // Calibration Succes
+    beepManager->calibrationSuccess();   // Calibration Succes
     #ifdef SERIAL_DEBUG
       Serial.println("Calibration Success");
     #endif

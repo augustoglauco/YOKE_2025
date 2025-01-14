@@ -1,5 +1,6 @@
 #include "EepromManager.h"
 #include <EEPROM.h>
+#include "defines.h"
 
 EepromManager::EepromManager() {
     // Constructor implementation (if needed)

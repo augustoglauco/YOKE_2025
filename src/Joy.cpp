@@ -23,34 +23,12 @@ void Joy::initializeJoystick()
       SetupDefaults();
     }
 
-    SetGains();                           // set gains
-    //SetRangeJoystick();                   // set range is calling from main.cpp on setup()
-    Joystick1.begin(false);               // start joystick emulation (no auto send updates);
-        // Gains* g = Joystick1.getGains();
-        // Serial.println(g[1].totalGain);
-        // Serial.println(g[1].damperGain);
-        // Serial.println(g[1].constantGain);
-        // Serial.println(g[1].defaultSpringGain);
-        // Serial.println(g[1].frictionGain);
-        // Serial.println(g[1].inertiaGain);
-        // Serial.println(g[1].rampGain);  
-        // Serial.println(g[1].sawtoothdownGain);
-        // Serial.println(g[1].sawtoothupGain);
-        // Serial.println(g[1].sineGain);
-        // Serial.println(g[1].springGain);
-        // Serial.println(g[1].squareGain);
-        // Serial.println(g[1].triangleGain);
+    SetAll();                           // set gains
+    //SetRangeJoystick();               // set range is calling from main.cpp on setup()
+    Joystick1.begin(false);             // start joystick emulation (no auto send updates)
 }
 
 void Joy::SetRangeJoystick(AxisConfiguration* rollConfig, AxisConfiguration* pitchConfig) {
-    // Serial.print("ROLL MIN: ");
-    // Serial.println(rollConfig->iMin);
-    // Serial.print("ROLL MAX: ");
-    // Serial.println(rollConfig->iMax);
-    // Serial.print("PITCH MIN: ");
-    // Serial.println(pitchConfig->iMin);
-    // Serial.print("PITCH MAX: ");
-    // Serial.println(pitchConfig->iMax);
     Joystick1.setXAxisRange(rollConfig->iMin, rollConfig->iMax);
     Joystick1.setYAxisRange(pitchConfig->iMin, pitchConfig->iMax);
 };
@@ -86,8 +64,6 @@ void Joy::SetupDefaults() {
     adjForceMax[MEM_PITCH]=default_PITCH_FORCE_MAX;
     adjPwmMin[MEM_PITCH]=default_PITCH_PWM_MIN;
     adjPwmMax[MEM_PITCH]=default_PITCH_PWM_MAX;
-
-    //Joystick1.setGains(gains);
 }
 
 void Joy::SetAll() {
@@ -165,13 +141,6 @@ void Joy::UpdateEffects(bool recalculate, Encoder* counterRoll, Encoder* counter
     Joystick1.setXAxis(CR);
     Joystick1.setYAxis(CP);
 
-    // #ifdef SERIAL_DEBUG
-    // Serial.print("PITCH: ");
-    // Serial.println(CP);
-    // Serial.print("ROLL: ");
-    // Serial.println(CR);
-    // #endif
-
     Joystick1.setEffectParams(effects);
     Joystick1.getForce(forces);
 }
@@ -179,17 +148,6 @@ void Joy::UpdateEffects(bool recalculate, Encoder* counterRoll, Encoder* counter
 Joystick_& Joy::getJoystick() {
   return Joystick1;
 }
-
-// Define the method to return all the data together
-// JoyData Joy::getJoyData() {
-//     JoyData data;
-//     memcpy(data.effects, effects, sizeof(effects));
-//     memcpy(data.adjForceMax, adjForceMax, sizeof(adjForceMax));
-//     memcpy(data.adjPwmMin, adjPwmMin, sizeof(adjPwmMin));
-//     memcpy(data.adjPwmMax, adjPwmMax, sizeof(adjPwmMax));
-//     memcpy(data.forces, forces, sizeof(forces));
-//     return data;
-// }
 
 JoyData Joy::getJoyData() {
     JoyData data;
@@ -218,19 +176,3 @@ void Joy::setJoyData(JoyData& data) {
         forces[i] = *data.forces[i];
     }
 }
-
-
-// JoyData Joy::setJoyData(JoyData data) {
-//     memcpy(effects, data.effects, sizeof(effects));
-//     memcpy(adjForceMax, data.adjForceMax, sizeof(adjForceMax));
-//     memcpy(adjPwmMin, data.adjPwmMin, sizeof(adjPwmMin));
-//     memcpy(adjPwmMax, data.adjPwmMax, sizeof(adjPwmMax));
-//     memcpy(forces, data.forces, sizeof(forces));
-//     return data;
-// }
-
-
-
-
-
-

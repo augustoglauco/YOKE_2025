@@ -2,9 +2,8 @@
 #include "defines.h"
 
 // Constructor to initialize the Joystick pointer and end switch state pointers
-//Multiplexer::Multiplexer(Joystick_* joystickPtr, bool* rollLeft, bool* rollRight, bool* pitchUp, bool* pitchDown) {
 Multiplexer::Multiplexer(Joystick_* joystickPtr) {
-    this->_joystick = joystickPtr;
+    this->joy = joystickPtr;
 }
 
 // Method to read the multiplexer and update end switches
@@ -18,22 +17,21 @@ void Multiplexer::ReadMux() {
         PORTF = (x & (1 << i)) ? (PORTF | (1 << (7 - i))) : (PORTF & ~(1 << (7 - i)));
     }
 
-    // Comentado MUX YOKE- AUGUSTO
-    // // enable mux 1
-    // //PORTC = PORTC & B10111111;  // Digital Pin 5 - PortC6
-    // PORTC &= ~B01000000; // Digital Pin 5 - PortC6
+    // enable mux 1
+    //PORTC = PORTC & B10111111;  // Digital Pin 5 - PortC6
+    PORTC &= ~B01000000; // Digital Pin 5 - PortC6
 
-    // // wait for capacitors of mux to react
-    // delayMicroseconds(1);
+    // wait for capacitors of mux to react
+    delayMicroseconds(1);
 
-    // // read value comentado Augusto
-    // iYokeButtonPinStates |= digitalRead(MUX_SIGNAL_YOKE) << x;
+    // read value comentado Augusto
+    iYokeButtonPinStates |= digitalRead(MUX_SIGNAL_YOKE) << x;
 
-    // // disable mux1
-    // PORTC |= B00100000; // Digital Pin 5 - PortC6
+    // disable mux1
+    PORTC |= B00100000; // Digital Pin 5 - PortC6
 
-    // enable mux 2
-    //PORTD &= ~B00010000; // Digital Pin 4 - PortD4 antigo - AUGUSTO
+    //enable mux 2
+    PORTD &= ~B00010000; // Digital Pin 4 - PortD4 antigo - AUGUSTO
     PORTB &= ~MUX_EN_INPUT_ADD; // SCLK - PB01 - 
     digitalWrite(MUX_EN_INPUT, LOW);
 
@@ -49,11 +47,12 @@ void Multiplexer::ReadMux() {
   }  //for
 
   //Check end switches
-  blEndSwitchRollLeft=(iSensorPinStates & (1 << ADJ_ENDSWITCH_ROLL_LEFT))==0;
-  blEndSwitchRollRight=(iSensorPinStates & (1 << ADJ_ENDSWITCH_ROLL_RIGHT))==0;
-  blEndSwitchPitchUp=(iSensorPinStates & (1 << ADJ_ENDSWITCH_PITCH_UP))==0;
-  blEndSwitchPitchDown=(iSensorPinStates & (1 << ADJ_ENDSWITCH_PITCH_DOWN))==0;
-  blCalubrationButtonPushed=(iSensorPinStates & (1 << ADJ_CALIBRATION_BUTTON))==0;
+  blEndSwitchRollLeft=(iSensorPinStates & (1 << ADJ_ENDSWITCH_ROLL_LEFT)) == 0;
+  blEndSwitchRollRight=(iSensorPinStates & (1 << ADJ_ENDSWITCH_ROLL_RIGHT)) == 0;
+  blEndSwitchPitchUp=(iSensorPinStates & (1 << ADJ_ENDSWITCH_PITCH_UP)) == 0;
+  blEndSwitchPitchDown=(iSensorPinStates & (1 << ADJ_ENDSWITCH_PITCH_DOWN)) == 0;
+  blCalubrationButtonPushed=(iSensorPinStates & (1 << ADJ_CALIBRATION_BUTTON)) == 0;
+  blMotorPower=(iSensorPinStates & (1 << ADJ_MOTOR_POWER)) != 0;
 }
 
 bool Multiplexer::EndSwitchRollLeft(){
@@ -76,46 +75,58 @@ bool Multiplexer::CalibrationButtonPushed(){
   return blCalubrationButtonPushed;
 }
 
+uint16_t Multiplexer::getYokeButtonPinStates(){
+  return iYokeButtonPinStates;
+}
+
+uint16_t  Multiplexer::getSensorPinStates(){
+  return iSensorPinStates;
+}
+
+bool Multiplexer::MotorPower(){
+  return blMotorPower;
+}
+
 // // Method to update the joystick buttons based on multiplexer input
-// void Multiplexer::UpdateJoystickButtons() {
-// // Bit-Shift um 12 für Hat-Switch-Position
-//   uint16_t hatSwitchState = iYokeButtonPinStates << 12;
+void Multiplexer::UpdateJoystickButtons() {
+// Bit-Shift um 12 für Hat-Switch-Position
+  uint16_t hatSwitchState = iYokeButtonPinStates << 12;
 
-//   // Setze die Hat-Switch-Position
-//   switch (hatSwitchState) {
-//     case 0B0000000000000000:
-//       joystick->setHatSwitch(0, -1); // no direction
-//       break;
-//     case 0B0100000000000000:
-//       joystick->setHatSwitch(0, 0); // up
-//       break;
-//     case 0B0101000000000000:
-//       joystick->setHatSwitch(0, 45); // up right
-//       break;
-//     case 0B0001000000000000:
-//       joystick->setHatSwitch(0, 90); // right
-//       break;
-//     case 0B0011000000000000:
-//       joystick->setHatSwitch(0, 135); // down right
-//       break;
-//     case 0B0010000000000000:
-//       joystick->setHatSwitch(0, 180); // down
-//       break;
-//     case 0B1010000000000000:
-//       joystick->setHatSwitch(0, 225); // down left
-//       break;
-//     case 0B1000000000000000:
-//       joystick->setHatSwitch(0, 270); // left
-//       break;
-//     case 0B1100000000000000:
-//       joystick->setHatSwitch(0, 315); // up left
-//       break;
-//     default:
-//       break; // no change
-//   }
+  // Setze die Hat-Switch-Position
+  switch (hatSwitchState) {
+    case 0B0000000000000000:
+      joy->setHatSwitch(0, -1); // no direction
+      break;
+    case 0B0100000000000000:
+      joy->setHatSwitch(0, 0); // up
+      break;
+    case 0B0101000000000000:
+      joy->setHatSwitch(0, 45); // up right
+      break;
+    case 0B0001000000000000:
+      joy->setHatSwitch(0, 90); // right
+      break;
+    case 0B0011000000000000:
+      joy->setHatSwitch(0, 135); // down right
+      break;
+    case 0B0010000000000000:
+      joy->setHatSwitch(0, 180); // down
+      break;
+    case 0B1010000000000000:
+      joy->setHatSwitch(0, 225); // down left
+      break;
+    case 0B1000000000000000:
+      joy->setHatSwitch(0, 270); // left
+      break;
+    case 0B1100000000000000:
+      joy->setHatSwitch(0, 315); // up left
+      break;
+    default:
+      break; // no change
+  }
 
-//   // Lese Button-Zustände vom Multiplexer
-//   for (byte channel = 4; channel < 16; channel++) {
-//     joystick->setButton(channel - 4, (iYokeButtonPinStates >> channel) & 1);
-//   }
-// }
+  // Lese Button-Zustände vom Multiplexer
+  for (byte channel = 4; channel < 16; channel++) {
+    joy->setButton(channel - 4, (iYokeButtonPinStates >> channel) & 1);
+  }
+}

@@ -7,6 +7,8 @@
 #include "EepromManager.h"
 #include "AxisCalibration.h"
 
+#define MEM_AXES  2
+
 struct JoyData {
     EffectParams* effects[FFB_AXIS_COUNT];
     Gains* gains[FFB_AXIS_COUNT];    

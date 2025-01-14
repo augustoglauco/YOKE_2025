@@ -6,7 +6,8 @@ byte bSerialIndex = 0;                // serial index
 EepromManager eepromM;                // Create a EepromManager instance
 
 Communication::Communication(
-   Joy& joy 
+   Joy& joy
+  ,Multiplexer& multiplexer 
   ,AxisConfiguration& rollConfig
   ,AxisConfiguration& pitchConfig
   ,Encoder& counterRoll 
@@ -15,6 +16,7 @@ Communication::Communication(
   ,byte &pitch_speed 
   ) : 
   joy(joy)
+  ,multiplexer(multiplexer)
   ,rollConfig(rollConfig)
   ,pitchConfig(pitchConfig)
   ,counterRoll(counterRoll) 
@@ -128,12 +130,12 @@ void Communication::CMD_READ_ALL_VALUES() {
 
     // Alle Buttonzustände
     for (byte channel = 0; channel < 16; channel++) {
-        //SerialWriteValue(iYokeButtonPinStates & (1 << channel)); // Index 0 - 15
+        SerialWriteValue(multiplexer.getYokeButtonPinStates() & (1 << channel)); // Index 0 - 15
     }
 
     // Alle Sensordaten
     for (byte channel = 0; channel < 16; channel++) {
-        //SerialWriteValue(iSensorPinStates & (1 << channel)); // Index 16 - 31
+        SerialWriteValue(multiplexer.getSensorPinStates() & (1 << channel)); // Index 16 - 31
     }
 
     // Roll-Achsenkonfiguration und Messwerte
@@ -327,5 +329,4 @@ void Communication::setGainCommands(uint8_t memIndex, int16_t cmd, int16_t value
             g.frictionGain = (byte)value;
             break;
     }
-    //joy.SetGains(&g);
 }

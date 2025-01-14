@@ -4,6 +4,7 @@
     #include <Arduino.h>
     #include <Encoder.h>
     #include "Multiplexer.h"
+    #include "BeepManager.h"
 
     /******************************************
          Calibration Constants
@@ -38,6 +39,8 @@
             bool blIsRoll;                      // is Roll or Pitch                   
             byte speed;                         // Current speed of the motor
             unsigned long lastMovementTime;     // Timestamp of the last movement
+            BeepManager* beepManager;           // Pointer to the BeepManager object
+
 
             // Configuration constants
             static const byte maxSpeed = CALIBRATION_MAX_SPEED;                                     // Maximum speed
@@ -65,13 +68,10 @@
         public:
             // Constructor to initialize motor pins and end switches
             //Axis(int motorLeftPin, int motorRightPin, bool* endSwitchLeft, bool* endSwitchRight, Encoder* encoder, Multiplexer* multiplexerPtr);
-            Axis(int motorLeftPin, int motorRightPin, bool isRoll, Encoder* encoder, Multiplexer* multiplexerPtr);
-
-            // Method to move the motor in a given direction
-            void MoveMotor(bool direction);
-
-            // Method to stop the motor
-            void StopMotor();
+            Axis(int motorLeftPin, int motorRightPin, bool isRoll, Encoder* encoder, Multiplexer* multiplexerPtr, BeepManager* beepManager);
+                        
+            void MoveMotor(bool direction); // Method to move the motor in a given direction            
+            void StopMotor(); // Method to stop the motor
 
             // Calibration method for the axis
             bool Calibrate(); // return true on success, false if errors exists

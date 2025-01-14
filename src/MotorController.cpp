@@ -4,13 +4,13 @@ MotorController::MotorController(Multiplexer& multiplexer, byte& roll_speed,
                 byte& pitch_speed) : mux(multiplexer), roll_speed(roll_speed), pitch_speed(pitch_speed) {}
 
 void MotorController::EnableMotors() {
-    digitalWrite(PITCH_EN, HIGH);
-    digitalWrite(ROLL_EN, HIGH);
+    digitalWrite(ROLL_PITCH_EN, HIGH);
+    //digitalWrite(ROLL_EN, HIGH);
 }
 
 void MotorController::DisableMotors() {
-    digitalWrite(PITCH_EN, LOW);
-    digitalWrite(ROLL_EN, LOW);
+    digitalWrite(ROLL_PITCH_EN, LOW);
+    //digitalWrite(ROLL_EN, LOW);
 
     analogWrite(ROLL_L_PWM, 0);  // Stop left
     analogWrite(ROLL_R_PWM, 0);  // Stop right
@@ -52,6 +52,13 @@ void MotorController::MoveMotorByForce(byte &rSpeed, bool blEndSwitch, byte pinL
     } else {
         // Cut force to maximum value
         int pForce = constrain(abs(gForce), 0, forceMax);
+        // Serial.println(gForce);
+        // Serial.println(pForce);
+        // Serial.println(forceMax);   
+        // Serial.println(pwmMin);
+        // Serial.println(pwmMax);
+        // Serial.println(rSpeed); 
+
         // Calculate motor speed (pwm) by force between min pwm and max pwm speed
         rSpeed = map(pForce, 0, forceMax, pwmMin, pwmMax);
 

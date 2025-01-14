@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "joy.h"
+#include "multiplexer.h"
 
 /******************************************
       Communication Command Constants
@@ -69,9 +70,9 @@
 
 class Communication {
   public:
-    // Communication(Joy &joy, long baudRate, AxisConfiguration &rollConfig, AxisConfiguration &pitchConfig, Encoder &counterRoll, Encoder &counterPitch, byte &roll_speed, byte &pitch_speed);
     Communication(
        Joy &joy
+      ,Multiplexer &multiplexer
       ,AxisConfiguration& rollConfig
       ,AxisConfiguration& pitchConfig
       ,Encoder &counterRoll 
@@ -88,6 +89,7 @@ class Communication {
   private:    
 
     Joy& joy; // reference to joy object
+    Multiplexer& multiplexer; // reference to multiplexer object
     long baudRate; // Baud rate for serial communication
     AxisConfiguration& rollConfig; // reference to rollConfig object
     AxisConfiguration& pitchConfig; // reference to pitchConfig object
@@ -102,7 +104,6 @@ class Communication {
     void CMD_READ_ALL_VALUES();
     void CMD_READ_ALL_PARAMS();
     void SerialWriteValue(int16_t value);
-
 };
 
 #endif

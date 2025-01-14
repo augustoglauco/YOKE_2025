@@ -41,7 +41,12 @@ class BeepManager {
 
     // wrong encoder direction
     void calibrationEncoderInverted();
-  private:
+    
+    void NoMotorPower();
+
+    void calibrationBeepAxis(bool isRoll);
+
+private:
     int buzzerPin;
 
     // create tone
@@ -51,13 +56,12 @@ class BeepManager {
     void beep(int duration, int frequency);
 
     // beep code for roll axis
-    // void calibrationBeepRoll();
+     void calibrationBeepRoll();
 
     // beep code for pitch axis
-    //void calibrationBeepPitch();
+    void calibrationBeepPitch();
 
-    // switch between axis
-    //void calibrationBeepAxis(bool isRoll);
+
 };
 
 #endif

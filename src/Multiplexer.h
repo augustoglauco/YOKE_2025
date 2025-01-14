@@ -7,10 +7,10 @@
 
 class Multiplexer {
 private:
-    Joystick_* _joystick;  // Pointer to a Joystick object
+    Joystick_* joy;  // Pointer to a Joystick object
     // variables for button pin states
-    uint16_t iYokeButtonPinStates = 0;
-    uint16_t iSensorPinStates = 0;
+    uint16_t iYokeButtonPinStates;
+    uint16_t iSensorPinStates;
 
     // Pointers to end switch states
     bool blEndSwitchRollLeft;    
@@ -18,6 +18,8 @@ private:
     bool blEndSwitchPitchUp;     
     bool blEndSwitchPitchDown;   
     bool blCalubrationButtonPushed;
+    bool blMotorPower;
+
 public:
     
     // Constructor: pass a pointer to a Joystick object
@@ -34,7 +36,11 @@ public:
     bool EndSwitchRollRight();   
     bool EndSwitchPitchUp();     
     bool EndSwitchPitchDown();   
-    bool CalibrationButtonPushed(); 
+    bool CalibrationButtonPushed();
+    uint16_t getYokeButtonPinStates();
+    uint16_t getSensorPinStates();
+    bool MotorPower();
+    void UpdateJoystickButtons();
 };
 
 #endif

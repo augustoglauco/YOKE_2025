@@ -12,14 +12,16 @@
    ****************************/
    #define MEM_ROLL  0
    #define MEM_PITCH  1
+   #define MEM_AXES 2
+
+   // Motordriver Enable pin
+   #define ROLL_PITCH_EN  7 //11 
 
    // Pitch Motordriver pins
-   #define PITCH_EN  8 //11 
    #define PITCH_U_PWM 9 //6
    #define PITCH_D_PWM 10 //13
 
    // Roll Motordriver pins
-   #define ROLL_EN 7 //8
    #define ROLL_R_PWM 5 //9
    #define ROLL_L_PWM 6 //6 //10
 
@@ -30,14 +32,14 @@
    #define MUX_S3 A3
 
    // // Multiplexer Yoke Buttons
-   // #define MUX_EN_YOKE 5
-   // #define MUX_SIGNAL_YOKE A5
+   #define MUX_EN_YOKE 16 // MOSI
+   #define MUX_SIGNAL_YOKE 8
 
    // Multiplexer Adjustemts for Calib Button, Force Potis, End Switches
    #define MUX_EN_INPUT 15 //4
-   const byte MUX_EN_INPUT_ADD = B00000010;
    #define MUX_SIGNAL_INPUT A6 //A4
-
+   const byte MUX_EN_INPUT_ADD = B00000010; 
+   
    // Encoder PINS Roll
    #define ROLL1_PIN 1
    #define ROLL2_PIN 0
@@ -51,6 +53,7 @@
    #define ADJ_ENDSWITCH_ROLL_LEFT 2
    #define ADJ_ENDSWITCH_ROLL_RIGHT 3
    #define ADJ_CALIBRATION_BUTTON 4
+   #define ADJ_MOTOR_POWER 5
    
    // Default vaules for gains and effect if nothing saved into eeprom
    #define DEFAULT_GAIN 100
