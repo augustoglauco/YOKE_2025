@@ -164,15 +164,15 @@ JoyData Joy::getJoyData() {
     return data;
 }
 
-void Joy::setJoyData(JoyData& data) {
-    for (int i = 0; i < FFB_AXIS_COUNT; ++i) {
-        effects[i] = *data.effects[i];
-        gains[i] = *data.gains[i];
-    }
-    for (int i = 0; i < MEM_AXES; ++i) {
-        adjForceMax[i] = *data.adjForceMax[i];
-        adjPwmMin[i] = *data.adjPwmMin[i];
-        adjPwmMax[i] = *data.adjPwmMax[i];
-        forces[i] = *data.forces[i];
-    }
-}
+// void Joy::setJoyData(JoyData& data) {
+//     for (int i = 0; i < FFB_AXIS_COUNT; ++i) {
+//         effects[i] = *data.effects[i];
+//         gains[i] = *data.gains[i];
+//     }
+//     for (int i = 0; i < MEM_AXES; ++i) {
+//         adjForceMax[i] = *data.adjForceMax[i];
+//         adjPwmMin[i] = *data.adjPwmMin[i];
+//         adjPwmMax[i] = *data.adjPwmMax[i];
+//         forces[i] = *data.forces[i];
+//     }
+//}
