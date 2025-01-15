@@ -52,17 +52,11 @@ void MotorController::MoveMotorByForce(byte &rSpeed, bool blEndSwitch, byte pinL
     } else {
         // Cut force to maximum value
         int pForce = constrain(abs(gForce), 0, forceMax);
-        // Serial.println(gForce);
-        // Serial.println(pForce);
-        // Serial.println(forceMax);   
-        // Serial.println(pwmMin);
-        // Serial.println(pwmMax);
-        // Serial.println(rSpeed); 
 
         // Calculate motor speed (pwm) by force between min pwm and max pwm speed
         rSpeed = map(pForce, 0, forceMax, pwmMin, pwmMax);
 
-        // Which direction?
+        //Which direction?
         if (gForce > 0) {
             analogWrite(pinRPWM, 0);       // Stop right
             analogWrite(pinLPWM, rSpeed);  // Speed up left

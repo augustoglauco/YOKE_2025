@@ -34,11 +34,12 @@
    // // Multiplexer Yoke Buttons
    #define MUX_EN_YOKE 16 // MOSI
    #define MUX_SIGNAL_YOKE 8
+   const byte MUX1_EN_INPUT_ADD = B00000100; 
 
    // Multiplexer Adjustemts for Calib Button, Force Potis, End Switches
    #define MUX_EN_INPUT 15 //4
    #define MUX_SIGNAL_INPUT A6 //A4
-   const byte MUX_EN_INPUT_ADD = B00000010; 
+   const byte MUX2_EN_INPUT_ADD = B00000010; 
    
    // Encoder PINS Roll
    #define ROLL1_PIN 1

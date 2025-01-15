@@ -12,38 +12,23 @@ void Multiplexer::ReadMux() {
   iSensorPinStates = 0;
 
   // for every 16 imput lines of a multiplexer
-  for (byte x = 0; x < 6; x++) {
+  for (byte x = 0; x < 16; x++) {
     for (int i = 0; i < 4; i++) {
-        PORTF = (x & (1 << i)) ? (PORTF | (1 << (7 - i))) : (PORTF & ~(1 << (7 - i)));
+        PORTF = (x & (1 << i)) ? (PORTF | (1 << (7 - i))) : (PORTF & ~(1 << (7 - i)));  // set the address lines
     }
 
     // enable mux 1
-    //PORTC = PORTC & B10111111;  // Digital Pin 5 - PortC6
-    PORTC &= ~B01000000; // Digital Pin 5 - PortC6
-
-    // wait for capacitors of mux to react
-    delayMicroseconds(1);
-
-    // read value comentado Augusto
-    iYokeButtonPinStates |= digitalRead(MUX_SIGNAL_YOKE) << x;
-
-    // disable mux1
-    PORTC |= B00100000; // Digital Pin 5 - PortC6
+    PORTB &= ~MUX1_EN_INPUT_ADD; // Digital Pin 16- PortB2 - MOSI
+    delayMicroseconds(1);       // wait for capacitors of mux to react
+    iYokeButtonPinStates |= digitalRead(MUX_SIGNAL_YOKE) << x; // Read value from the first multiplexer
+    PORTB |= MUX1_EN_INPUT_ADD; // disable mux1 -Digital Pin 5 - PortB2 - MOSI
 
     //enable mux 2
-    PORTD &= ~B00010000; // Digital Pin 4 - PortD4 antigo - AUGUSTO
-    PORTB &= ~MUX_EN_INPUT_ADD; // SCLK - PB01 - 
-    digitalWrite(MUX_EN_INPUT, LOW);
-
-    // wait for capacitors of mux to react
-    delayMicroseconds(1);
-
-    // Read value from the second multiplexer
-    iSensorPinStates |= digitalRead(MUX_SIGNAL_INPUT) << x;
-
-    // disblae mux 2
-    //PORTD |= B00010000; // Digital Pin 4 - PortD4 - AUGUSTO
-    PORTB |= MUX_EN_INPUT_ADD;
+    PORTB &= ~MUX2_EN_INPUT_ADD; // SCLK - PB01 - 
+    //digitalWrite(MUX_EN_INPUT, LOW);
+    delayMicroseconds(1); // wait for capacitors of mux to react    
+    iSensorPinStates |= digitalRead(MUX_SIGNAL_INPUT) << x; // Read value from the second multiplexer
+    PORTB |= MUX2_EN_INPUT_ADD;    // disblae mux 2
   }  //for
 
   //Check end switches

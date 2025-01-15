@@ -17,7 +17,6 @@ private:
 public:
     MotorController(Multiplexer& multiplexer, byte& roll_speed, byte& pitch_speed);
 
-    //void ArduinoSetup();
     void EnableMotors();
     void DisableMotors();
     void PrepareMotors(int16_t forces[], int16_t forceMax[], byte pwmMin[], byte pwmMax[]);
