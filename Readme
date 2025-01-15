@@ -1,5 +1,5 @@
 # Arduino_FFB_Yoke
-Flightsim FFB Yoke with Arduino Leonardo
+Flightsim FFB Yoke with Arduino Leonardo (Changed to Arduino Pro Micro)
 
 ### use at your own risk. 
 I am not responsible for any damage to man and machine. Be careful when handling electronics and mechanics.
@@ -63,5 +63,3 @@ This project is a combination of several existing github projects and 3d Models 
 ### Thingiverse
 * [Saitek FFB Yoke](https://www.thingiverse.com/thing:5241628)
 * [CadetYoke v2.0](https://www.thingiverse.com/thing:4884092)
-
-teste
